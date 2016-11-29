@@ -18,7 +18,9 @@ namespace NetTWO_ThreadsREAL
         public static int total = 0;
         //this will be used for LOCKING the threads to prevent one starting before another is complete
         //it can be any type (e.g., int), any number, any name, but it can't be null
-        public static object obj = 1; 
+        public static object obj = 1;
+        // from notes: "-	-	Use Static Variable"
+        public static string data = "";
         public Form1()
         {
             InitializeComponent();
@@ -51,6 +53,24 @@ namespace NetTWO_ThreadsREAL
             Thread.Sleep(5000);
             MessageBox.Show(total.ToString());
         }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            stuff s = new stuff();
+            Thread t = new Thread(new ThreadStart(s.greet));
+            t.Name = "Hi from Program";  //this could be any variable
+            t.Start();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            if(data != "")
+            {
+                textBox1.Text = data;
+                data = "";
+            }
+            
+        }
     }
     public class stuff
     {
@@ -74,6 +94,12 @@ namespace NetTWO_ThreadsREAL
                     Form1.total = Form1.total + 1;
                 }
             }
+        }
+        public void greet()  // from notes: "-	Use thread name"
+        {
+            Form1.data = "Stuff from thread";
+            Thread id = Thread.CurrentThread;
+            MessageBox.Show(id.Name);
         }
     }
 }
